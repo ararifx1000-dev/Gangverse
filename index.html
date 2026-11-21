@@ -179,14 +179,12 @@
       <div id="authStatusBadge" class="badge">Offline</div>
     </div>
 
-    <!-- AUTH SECTION -->
     <div id="authSection" class="card">
       <div class="tabs">
         <button type="button" id="tabLogin" class="active">Login</button>
         <button type="button" id="tabSignup">Register</button>
       </div>
 
-      <!-- LOGIN FORM -->
       <form id="loginForm" style="display: block;">
         <label for="loginEmail">Email</label>
         <input id="loginEmail" type="email" required placeholder="player@example.com" />
@@ -199,7 +197,6 @@
         </div>
       </form>
 
-      <!-- SIGNUP FORM -->
       <form id="signupForm" style="display: none;">
         <div class="grid-2">
           <div>
@@ -240,9 +237,7 @@
       <div id="authMsg" class="status"></div>
     </div>
 
-    <!-- APP SECTION (WHEN LOGGED IN) -->
     <div id="appSection" style="display: none;">
-      <!-- MEMBER ID CARD -->
       <div class="id-card">
         <div class="id-top">
           <div>
@@ -261,7 +256,6 @@
         </div>
       </div>
 
-      <!-- REAL-TIME CHAT -->
       <div class="card">
         <div class="row-between" style="margin-bottom: 10px;">
           <div class="tabs" style="margin-bottom: 0;">
@@ -298,7 +292,6 @@
   <script>
     const SUPABASE_URL = "https://qverihfqvbqljctwppos.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_CWfoYn0dkwuf8r4Jdfw-oA_UyULI8wG";
-
     const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let currentUser = null;
@@ -308,8 +301,7 @@
     let chatSubscription = null;
 
     function getChannelLabel(channel) {
-      if (channel === "global") return "Global";
-      return channel;
+      return channel === "global" ? "Global" : channel;
     }
 
     function showStatus(elId, text, isError = false) {
@@ -347,9 +339,7 @@
       const { data, error } = await sb.auth.signUp({
         email,
         password,
-        options: {
-          data: { username, display_name, gang, player_id }
-        }
+        options: { data: { username, display_name, gang, player_id } }
       });
 
       if (error) {
@@ -360,7 +350,7 @@
       if (data.session) {
         showStatus("authMsg", "Account created! Entering Gangverse...");
       } else {
-        showStatus("authMsg", "Account created! Please check your email inbox/spam to confirm your account, then login.");
+        showStatus("authMsg", "Account created! Please check your email to confirm, then login.");
         switchAuthTab("login");
       }
     }
@@ -368,14 +358,10 @@
     async function handleLogin(e) {
       e.preventDefault();
       clearStatus("authMsg");
-
       const email = document.getElementById("loginEmail").value.trim();
       const password = document.getElementById("loginPassword").value;
-
       const { error } = await sb.auth.signInWithPassword({ email, password });
-      if (error) {
-        showStatus("authMsg", "Login failed: " + error.message, true);
-      }
+      if (error) showStatus("authMsg", "Login failed: " + error.message, true);
     }
 
     async function handleLogout() {
@@ -393,15 +379,12 @@
 
       if (!error && Array.isArray(data)) {
         profilesMap = {};
-        for (const p of data) {
-          profilesMap[p.id] = p;
-        }
+        for (const p of data) profilesMap[p.id] = p;
       }
     }
 
     async function loadMyProfile() {
       await loadProfilesMap();
-
       const { data: ownRows } = await sb
         .from("profiles")
         .select("id, username, display_name, gang, role, player_id")
@@ -409,7 +392,6 @@
         .limit(1);
 
       const ownData = Array.isArray(ownRows) && ownRows.length > 0 ? ownRows[0] : null;
-
       currentProfile = ownData || profilesMap[currentUser.id] || {
         id: currentUser.id,
         username: currentUser.email.split("@")[0],
@@ -488,41 +470,26 @@
         return;
       }
 
-      for (const row of data) {
-        box.appendChild(renderMessageRow(row));
-      }
+      for (const row of data) box.appendChild(renderMessageRow(row));
       box.scrollTop = box.scrollHeight;
     }
 
     function subscribeRealtime() {
-      if (chatSubscription) {
-        sb.removeChannel(chatSubscription);
-      }
-
+      if (chatSubscription) sb.removeChannel(chatSubscription);
       const rtBadge = document.getElementById("rtStatus");
       rtBadge.textContent = "Realtime: Connecting...";
 
       chatSubscription = sb
         .channel("gangverse-realtime-chat")
-        .on(
-          "postgres_changes",
-          { event: "INSERT", schema: "public", table: "chat_messages" },
-          async (payload) => {
-            const newRow = payload.new;
-            if (!newRow || newRow.chat_type !== currentChannel) return;
-
-            if (!profilesMap[newRow.user_id]) {
-              await loadProfilesMap();
-            }
-
-            const box = document.getElementById("chatMessages");
-            if (box.textContent.includes("No messages in")) {
-              box.innerHTML = "";
-            }
-            box.appendChild(renderMessageRow(newRow));
-            box.scrollTop = box.scrollHeight;
-          }
-        )
+        .on("postgres_changes", { event: "INSERT", schema: "public", table: "chat_messages" }, async (payload) => {
+          const newRow = payload.new;
+          if (!newRow || newRow.chat_type !== currentChannel) return;
+          if (!profilesMap[newRow.user_id]) await loadProfilesMap();
+          const box = document.getElementById("chatMessages");
+          if (box.textContent.includes("No messages in")) box.innerHTML = "";
+          box.appendChild(renderMessageRow(newRow));
+          box.scrollTop = box.scrollHeight;
+        })
         .subscribe((status) => {
           if (status === "SUBSCRIBED") {
             rtBadge.textContent = "Realtime: Live";
@@ -545,7 +512,6 @@
 
       const input = document.getElementById("chatInput");
       const text = input.value.trim();
-
       if (!text) return;
       if (text.length > 300) {
         showStatus("chatMsg", "Message cannot exceed 300 characters.", true);
@@ -578,7 +544,6 @@
         badge.style.color = "var(--ok)";
         authSec.style.display = "none";
         appSec.style.display = "block";
-
         await loadMyProfile();
         await loadMessages();
         subscribeRealtime();
@@ -611,10 +576,7 @@
       bindEvents();
       const { data: { session } } = await sb.auth.getSession();
       handleAuthStateChange(session);
-
-      sb.auth.onAuthStateChange((_event, session) => {
-        handleAuthStateChange(session);
-      });
+      sb.auth.onAuthStateChange((_event, session) => handleAuthStateChange(session));
     }
 
     initSession();
