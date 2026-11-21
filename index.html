@@ -303,9 +303,14 @@
 
     let currentUser = null;
     let currentProfile = null;
-    let currentChannel = "Global";
+    let currentChannel = "global";
     let profilesMap = {};
     let chatSubscription = null;
+
+    function getChannelLabel(channel) {
+      if (channel === "global") return "Global";
+      return channel;
+    }
 
     function showStatus(elId, text, isError = false) {
       const el = document.getElementById(elId);
@@ -423,7 +428,7 @@
 
     function selectChannel(channel) {
       currentChannel = channel;
-      document.getElementById("chGlobal").classList.toggle("active", channel === "Global");
+      document.getElementById("chGlobal").classList.toggle("active", channel === "global");
       document.getElementById("chILGx").classList.toggle("active", channel === "ILGx");
       document.getElementById("chMBCx").classList.toggle("active", channel === "MBCx");
       clearStatus("chatMsg");
@@ -458,7 +463,8 @@
 
     async function loadMessages() {
       const box = document.getElementById("chatMessages");
-      box.innerHTML = `<div style="color: var(--muted); font-size: 0.85rem;">Loading ${escapeHtml(currentChannel)} chat...</div>`;
+      const label = getChannelLabel(currentChannel);
+      box.innerHTML = `<div style="color: var(--muted); font-size: 0.85rem;">Loading ${escapeHtml(label)} chat...</div>`;
 
       await loadProfilesMap();
 
@@ -476,7 +482,7 @@
 
       box.innerHTML = "";
       if (!data || data.length === 0) {
-        box.innerHTML = `<div style="color: var(--muted); font-size: 0.85rem;">No messages in ${escapeHtml(currentChannel)} yet. Start the conversation!</div>`;
+        box.innerHTML = `<div style="color: var(--muted); font-size: 0.85rem;">No messages in ${escapeHtml(label)} yet. Start the conversation!</div>`;
         return;
       }
 
@@ -591,7 +597,7 @@
       document.getElementById("signupForm").addEventListener("submit", handleSignup);
       document.getElementById("btnLogout").addEventListener("click", handleLogout);
 
-      document.getElementById("chGlobal").addEventListener("click", () => selectChannel("Global"));
+      document.getElementById("chGlobal").addEventListener("click", () => selectChannel("global"));
       document.getElementById("chILGx").addEventListener("click", () => selectChannel("ILGx"));
       document.getElementById("chMBCx").addEventListener("click", () => selectChannel("MBCx"));
 
