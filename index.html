@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08090d"><meta name="description" content="GANGVERSE — Two Gangs, One Community">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png">
+<title>GANGVERSE</title>
+<style>
+:root{--bg:#08090d;--panel:#12151d;--line:#252b38;--red:#ff334f;--blue:#3298ff;--muted:#9ca6b8;--white:#f4f6fb}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 90% 0%,#17213a 0,transparent 32%),var(--bg);color:var(--white);font:15px system-ui,Arial,sans-serif}
+header{padding:22px 18px 14px;position:sticky;top:0;background:#08090deF;backdrop-filter:blur(12px);z-index:2;border-bottom:1px solid var(--line)}
+.brand{font-size:25px;font-weight:900;letter-spacing:2px}.brand span{color:var(--red)}.tag{font-size:11px;color:var(--muted);letter-spacing:1.5px}
+main{padding:18px 15px 92px;max-width:680px;margin:auto}.welcome{font-size:23px;font-weight:800;margin:8px 0 4px}.sub{color:var(--muted);font-size:13px}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}.gang{padding:18px 14px;border-radius:16px;background:linear-gradient(145deg,#1a1d28,#10121a);border:1px solid var(--line);min-height:112px}.gang strong{font-size:22px;letter-spacing:1px}.gang.ilgx{box-shadow:inset 0 2px var(--red)}.gang.mbcx{box-shadow:inset 0 2px var(--blue)}.gang small{display:block;color:var(--muted);margin-top:8px}
+.section{margin-top:22px}.section h2{font-size:16px;margin:0 0 11px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:14px;margin-bottom:10px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.stat{background:#0d1017;border:1px solid var(--line);border-radius:12px;padding:12px 8px;text-align:center}.stat b{display:block;font-size:20px}.stat small{color:var(--muted);font-size:11px}
+.pill{display:inline-block;padding:5px 9px;border-radius:20px;background:#202638;color:#b9c8e4;font-size:11px}.item{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}.item:last-child{border:0}.muted{color:var(--muted);font-size:12px}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-around;background:#0c0e15f5;border-top:1px solid var(--line);padding:10px 4px calc(10px + env(safe-area-inset-bottom));z-index:3}
+nav button{background:none;border:0;color:var(--muted);font-size:11px;padding:4px 7px}nav button.active{color:white}nav span{display:block;font-size:19px;margin-bottom:3px}
+button.action{border:0;border-radius:10px;background:linear-gradient(90deg,var(--red),#bd2340);color:white;padding:10px 13px;font-weight:700}
+input,textarea{width:100%;background:#090c12;border:1px solid var(--line);border-radius:10px;color:white;padding:11px;margin:5px 0}
+.page{display:none}.page.active{display:block}.chatbox{height:230px;overflow:auto;background:#090c12;border-radius:12px;padding:12px;margin:10px 0}.bubble{background:#1c2331;border-radius:12px;padding:9px 11px;margin:8px 0;max-width:85%;font-size:13px}.bubble.me{margin-left:auto;background:#25334a}.tabs{display:flex;gap:6px;flex-wrap:wrap}.tabs button{background:#1a202c;color:#cbd4e5;border:1px solid var(--line);border-radius:20px;padding:7px 10px;font-size:12px}.tabs button.sel{border-color:var(--blue);color:white}
+footer{text-align:center;color:#687386;font-size:11px;padding:20px}
+</style></head>
+<body>
+<header><div class="brand">GANG<span>VERSE</span></div><div class="tag">TWO GANGS, ONE COMMUNITY</div></header>
+<main>
+<section id="home" class="page active">
+<div class="welcome">Welcome to GANGVERSE</div><div class="sub">Your gaming community hub</div>
+<div class="cards"><div class="gang ilgx"><strong>ILGx</strong><small>Gang Community</small><span class="pill">Active crew</span></div><div class="gang mbcx"><strong>MBCx</strong><small>Gang Community</small><span class="pill">Active crew</span></div></div>
+<div class="section"><h2>Community overview</h2><div class="stats"><div class="stat"><b>02</b><small>Gangs</small></div><div class="stat"><b id="memberCount">08</b><small>Demo members</small></div><div class="stat"><b>03</b><small>Upcoming events</small></div></div></div>
+<div class="section"><h2>Latest announcement</h2><div class="panel"><b>Welcome to GANGVERSE!</b><p class="muted">Keep the community respectful, active and united. Check announcements for updates.</p><span class="pill">Community notice</span></div></div>
+<div class="section"><h2>Quick access</h2><div class="panel item"><span>Community chat</span><button class="action" onclick="go('chat')">Open</button></div><div class="panel item"><span>Member directory</span><button class="action" onclick="go('members')">View</button></div></div>
+</section>
+<section id="chat" class="page"><div class="welcome">Community Chat</div><div class="sub">Demo mode — messages stay on this device</div><div class="tabs"><button class="sel" onclick="setRoom('Global',this)">Global</button><button onclick="setRoom('ILGx',this)">ILGx</button><button onclick="setRoom('MBCx',this)">MBCx</button><button onclick="setRoom('Private',this)">Private</button></div><div class="chatbox" id="chatbox"><div class="bubble">GANGVERSE Bot: Welcome to the community!</div></div><input id="message" placeholder="Write a message..." maxlength="300"><button class="action" onclick="sendMessage()">Send message</button></section>
+<section id="members" class="page"><div class="welcome">Members</div><div class="sub">Sample directory</div><div class="panel" id="memberList"><div class="item"><span><b>ILGx Leader</b><div class="muted">ILGx · Leader</div></span><span class="pill">Leader</span></div><div class="item"><span><b>MBCx Deputy</b><div class="muted">MBCx · Deputy</div></span><span class="pill">Deputy</span></div><div class="item"><span><b>Player 03</b><div class="muted">ILGx · Member</div></span><span class="pill">Member</span></div><div class="item"><span><b>Player 04</b><div class="muted">MBCx · Member</div></span><span class="pill">Member</span></div></div></section>
+<section id="updates" class="page"><div class="welcome">Updates & Events</div><div class="panel"><b>Community meeting</b><p class="muted">Schedule to be announced</p><span class="pill">Upcoming</span></div><div class="panel"><b>Friendly match</b><p class="muted">Details coming soon</p><span class="pill">Event</span></div><div class="panel"><b>Alliance board</b><p class="muted">Space for future community collaborations</p></div></section>
+<section id="profile" class="page"><div class="welcome">My Profile</div><div class="panel"><b>Guest Player</b><p class="muted">Local preview profile</p><div class="item"><span>Role</span><span>Member</span></div><div class="item"><span>Gang</span><span>Not assigned</span></div><div class="item"><span>Account</span><span class="pill">Demo only</span></div></div><p class="muted">This starter does not collect passwords or personal information.</p></section>
+<footer>GANGVERSE · Community prototype · Demo data only</footer>
+</main>
+<nav><button class="active" onclick="go('home',this)"><span>⌂</span>Home</button><button onclick="go('chat',this)"><span>▤</span>Chat</button><button onclick="go('members',this)"><span>♙</span>Members</button><button onclick="go('updates',this)"><span>◷</span>Updates</button><button onclick="go('profile',this)"><span>◎</span>Profile</button></nav>
+<script>
+let room='Global';
+function go(id,btn){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');else{let b=[...document.querySelectorAll('nav button')].find(x=>x.textContent.toLowerCase().includes(id));if(b)b.classList.add('active')}}
+function setRoom(r,b){room=r;document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');document.getElementById('chatbox').innerHTML='<div class="bubble">GANGVERSE Bot: You are viewing '+r+' chat (demo).</div>'}
+function sendMessage(){let i=document.getElementById('message'),v=i.value.trim();if(!v)return;let d=document.createElement('div');d.className='bubble me';d.textContent=v;document.getElementById('chatbox').appendChild(d);i.value='';document.getElementById('chatbox').scrollTop=99999}
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script></body></html>
