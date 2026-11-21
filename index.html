@@ -391,7 +391,7 @@
         .from("profiles")
         .select("id, username, display_name, gang, role, player_id");
 
-      if (!error && data) {
+      if (!error && Array.isArray(data)) {
         profilesMap = {};
         for (const p of data) {
           profilesMap[p.id] = p;
@@ -402,11 +402,13 @@
     async function loadMyProfile() {
       await loadProfilesMap();
 
-      const { data: ownData } = await sb
+      const { data: ownRows } = await sb
         .from("profiles")
         .select("id, username, display_name, gang, role, player_id")
         .eq("id", currentUser.id)
-        .single();
+        .limit(1);
+
+      const ownData = Array.isArray(ownRows) && ownRows.length > 0 ? ownRows[0] : null;
 
       currentProfile = ownData || profilesMap[currentUser.id] || {
         id: currentUser.id,
@@ -444,7 +446,7 @@
     }
 
     function renderMessageRow(row) {
-      const sender = profilesMap[row.user_id];
+      const sender = profilesMap[row.user_id] || (currentUser && row.user_id === currentUser.id ? currentProfile : null);
       const name = sender ? (sender.display_name || sender.username) : "Member";
       const gang = sender ? sender.gang : "";
       const time = row.created_at ? new Date(row.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "";
