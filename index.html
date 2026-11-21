@@ -396,7 +396,14 @@
 
     async function loadMyProfile() {
       await loadProfilesMap();
-      currentProfile = profilesMap[currentUser.id] || {
+
+      const { data: ownData } = await sb
+        .from("profiles")
+        .select("id, username, display_name, gang, role, player_id")
+        .eq("id", currentUser.id)
+        .single();
+
+      currentProfile = ownData || profilesMap[currentUser.id] || {
         id: currentUser.id,
         username: currentUser.email.split("@")[0],
         display_name: currentUser.email.split("@")[0],
