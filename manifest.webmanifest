@@ -1,0 +1,18 @@
+{
+  "id": "./",
+  "name": "AYTx",
+  "short_name": "AYTx",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b0e16",
+  "theme_color": "#101521",
+  "icons": [
+    {
+      "src": "aytx-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
