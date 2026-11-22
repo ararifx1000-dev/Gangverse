@@ -1,0 +1,2 @@
+self.addEventListener('push',e=>{let d={};try{d=e.data.json()}catch{};e.waitUntil(self.registration.showNotification('AYTx',{body:'You have a new private message',data:{peer:d.peer||''},tag:'aytx-message'}))});
+self.addEventListener('notificationclick',e=>{e.notification.close();const u=new URL('./',self.registration.scope);if(/^[0-9a-f-]{36}$/i.test(e.notification.data?.peer||''))u.searchParams.set('peer',e.notification.data.peer);e.waitUntil(clients.openWindow(u.href))});
